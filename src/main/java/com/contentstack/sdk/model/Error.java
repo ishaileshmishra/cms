@@ -2,14 +2,14 @@ package com.contentstack.sdk.model;
 
 public class Error {
 
-    String errorMessage = null;
-    int errorCode       = 0;
-    String errDetails = null;
+    String errorMessage = "No Error Message Found";
+    int errorCode = 0;
+    String errDetails = "No Error Details Found";
 
     public Error() {
     }
 
-    public Error(String errorMessage, int errorCode, String  errDetails) {
+    public Error(String errorMessage, int errorCode, String errDetails) {
         this.errorMessage = errorMessage;
         this.errorCode = errorCode;
         this.errDetails = errDetails;

@@ -11,7 +11,7 @@ import retrofit2.http.QueryMap;
 import java.util.HashMap;
 import java.util.Map;
 
-public interface CDAService {
+public interface Service {
 
     @GET("v3/content_types/{content_type_uid}")
     Call<ResponseBody> singleContentType(
@@ -26,8 +26,8 @@ public interface CDAService {
 
     @GET("v3/stacks/sync")
     Call<ResponseBody> synchronization(
-            @HeaderMap HashMap<String, String> header,
-            @QueryMap JSONObject query);
+            @HeaderMap Map<String, String> header,
+            @QueryMap Map<String, Object> query);
 
     @GET("v3/global_fields")
     Call<ResponseBody> globalFields(

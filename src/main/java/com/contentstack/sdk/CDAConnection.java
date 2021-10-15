@@ -8,21 +8,34 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 import java.io.IOException;
+import java.util.HashMap;
 
-public class Execute {
+class CDAConnection {
 
-    final void get(Call<ResponseBody> request, ResultCallBack callback) {
+    final void request(Call<ResponseBody> request, ResultCallBack callback) {
         try {
             Response<ResponseBody> response = request.execute();
             if (response.isSuccessful()) {
                 callback.onSuccess(response);
             } else {
+                assert response.errorBody() != null;
                 Error error = new Gson().fromJson(response.errorBody().string(), Error.class);
                 callback.onFailure(error);
             }
         } catch (IOException e) {
-            callback.onFailure(new Error());
+            Error error = new Error("No Error Message Found", 400,
+                    "No Error Details Found");
+            callback.onFailure(error);
         }
+    }
+
+
+    final HashMap<String, Object> calculateHeader(HashMap<String, String> headers, HashMap<String, Object> params) {
+        if (headers.containsKey("environment")) {
+            String env = headers.get("environment");
+            params.put("environment", env);
+        }
+        return params;
     }
 
 }

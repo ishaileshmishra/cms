@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-public class Query extends Execute {
+public class Query extends CDAConnection {
 
     private final String exceptionMsg = "Query Exception";
     protected JSONObject params = null;

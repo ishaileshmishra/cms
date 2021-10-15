@@ -2,25 +2,34 @@ package com.contentstack.sdk;
 
 
 import com.contentstack.sdk.callback.ResultCallBack;
-import com.contentstack.sdk.enums.ORDERBY;
+import com.contentstack.sdk.enums.ORDER_BY;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class AssetLibrary extends Execute {
-    private HashMap<String, String> stackHeader;
+public class AssetLibrary extends CDAConnection {
+    private final HashMap<String, String> stackHeader;
     public Map<String, Object> urlQueries;
-    public CDAService service;
-
+    public Service service;
 
     protected AssetLibrary() {
         this.stackHeader = new HashMap<>();
         this.urlQueries = new HashMap<>();
     }
 
-    protected void setStackInstance(CDAService service, HashMap<String, String> headers) {
+    public void fetchAll(ResultCallBack callback) {
+        if (this.stackHeader.containsKey("environment")) {
+            urlQueries.put("environment", this.stackHeader.get("environment"));
+            this.stackHeader.remove("environment");
+        }
+
+        Call<ResponseBody> request = this.service.allAssets(this.stackHeader, urlQueries);
+        request(request, callback);
+    }
+
+    protected void setStackInstance(Service service, HashMap<String, String> headers) {
         this.service = service;
         this.stackHeader.putAll(headers);
     }
@@ -39,7 +48,7 @@ public class AssetLibrary extends Execute {
     }
 
 
-    public AssetLibrary sort(String key, ORDERBY orderby) {
+    public AssetLibrary sort(String key, ORDER_BY orderby) {
         try {
             switch (orderby) {
                 case ASCENDING:
@@ -78,17 +87,6 @@ public class AssetLibrary extends Execute {
             throwException("relative_urls", "Exception while execution", e);
         }
         return this;
-    }
-
-
-    public void fetchAll(ResultCallBack callback) {
-        if (this.stackHeader.containsKey("environment")) {
-            urlQueries.put("environment", this.stackHeader.get("environment"));
-            this.stackHeader.remove("environment");
-        }
-
-        Call<ResponseBody> request = this.service.allAssets(this.stackHeader, urlQueries);
-        get(request, callback);
     }
 
 

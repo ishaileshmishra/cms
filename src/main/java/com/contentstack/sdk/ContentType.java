@@ -9,21 +9,19 @@ import retrofit2.Call;
 import java.util.HashMap;
 
 
-public class ContentType extends Execute {
+public class ContentType extends CDAConnection {
 
 
     protected String contentTypeUid;
-    protected CDAService service;
+    protected Service service;
     private HashMap<String, String> stackHeader;
 
     private ContentType() {
         throw new IllegalAccessError("Invalid constructor access");
     }
 
-    protected ContentType(
-            @NotNull CDAService service,
-            @NotNull String contentTypeUid,
-            @NotNull HashMap<String, String> headerMap) {
+    protected ContentType(@NotNull Service service, @NotNull String contentTypeUid,
+                          @NotNull HashMap<String, String> headerMap) {
         if (contentTypeUid.isEmpty()) {
             throw new IllegalArgumentException("content_type_uid can not be empty");
         }
@@ -69,7 +67,7 @@ public class ContentType extends Execute {
 
 
         Call<ResponseBody> request = this.service.singleContentType(this.contentTypeUid, this.stackHeader, params);
-        get(request, callback);
+        request(request, callback);
 
     }
 
@@ -80,7 +78,7 @@ public class ContentType extends Execute {
             params.put("environment", this.stackHeader.get("environment"));
         }
         Call<ResponseBody> request = this.service.allContentTypes(this.stackHeader, params);
-        get(request, callback);
+        request(request, callback);
 
     }
 

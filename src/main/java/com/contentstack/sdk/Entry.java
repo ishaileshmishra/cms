@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 import java.util.*;
 
-public class Entry extends Execute {
+public class Entry extends CDAConnection {
 
     private String contentTypeName = null;
     private HashMap<String, String> stackHeader = null;
@@ -38,9 +38,8 @@ public class Entry extends Execute {
     private Entry() {
     }
 
-    protected Entry(
-            @NotNull String contentTypeName,
-            @NotNull HashMap<String, String> headerMap) {
+    protected Entry(@NotNull String contentTypeName,
+                    @NotNull HashMap<String, String> headerMap) {
         this.contentTypeName = contentTypeName;
         this.stackHeader = headerMap;
         this.otherPostJSON = new JSONObject();

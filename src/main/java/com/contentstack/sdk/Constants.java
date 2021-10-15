@@ -18,9 +18,9 @@ public class Constants {
             params = new JSONObject();
         }
 
-        Iterator keys = params.keys();
+        Iterator<String> keys = params.keys();
         while (keys.hasNext()) {
-            String key = (String) keys.next();
+            String key = keys.next();
             Object value = params.opt(key);
             params.put(key, value);
         }
