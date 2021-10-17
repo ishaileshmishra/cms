@@ -16,8 +16,7 @@ public class ContentType extends CDAConnection {
     protected Service service;
     private HashMap<String, String> stackHeader;
 
-    private ContentType() {
-        throw new IllegalAccessError("Invalid constructor access");
+    public ContentType() {
     }
 
     protected ContentType(@NotNull Service service, @NotNull String contentTypeUid,
@@ -60,12 +59,13 @@ public class ContentType extends CDAConnection {
     }
 
 
-    public void fetch(JSONObject params, final ResultCallBack callback) {
+    public void fetch(JSONObject params, final ResultCallBack callback) throws IllegalAccessException {
+        if (this.contentTypeUid == null || this.contentTypeUid.isEmpty()) {
+            throw new IllegalAccessException("Please provide content_type_uid");
+        }
         if (this.stackHeader.containsKey("environment")) {
             params.put("environment", this.stackHeader.get("environment"));
         }
-
-
         Call<ResponseBody> request = this.service.singleContentType(this.contentTypeUid, this.stackHeader, params);
         request(request, callback);
 
@@ -79,7 +79,6 @@ public class ContentType extends CDAConnection {
         }
         Call<ResponseBody> request = this.service.allContentTypes(this.stackHeader, params);
         request(request, callback);
-
     }
 
 

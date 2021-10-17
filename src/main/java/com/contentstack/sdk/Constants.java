@@ -11,7 +11,9 @@ import java.util.TimeZone;
 
 public class Constants {
 
-    public final String SDK_VERSION = "2.0.0";
+    public static final String SDK_VERSION = "v2.0.0";
+    public static String SCHEMA = "https://";
+    public static String HOST = "cdn.contentstack.io";
 
     public static JSONObject processParams(JSONObject params) {
         if (params == null) {

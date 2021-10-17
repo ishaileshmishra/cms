@@ -1,11 +1,9 @@
 package com.contentstack.sdk;
-
 import com.contentstack.sdk.callback.ResultCallBack;
 import com.contentstack.sdk.model.Error;
 import okhttp3.ResponseBody;
 import org.junit.jupiter.api.Test;
 import retrofit2.Response;
-
 import java.io.IOException;
 
 public class SyncTestCase {
@@ -25,6 +23,7 @@ public class SyncTestCase {
 
             }
         });
+
     }
 
 }

@@ -10,9 +10,9 @@ import retrofit2.Response;
 import java.io.IOException;
 import java.util.HashMap;
 
-class CDAConnection {
+public class CDAConnection {
 
-    final void request(Call<ResponseBody> request, ResultCallBack callback) {
+    final protected void request(Call<ResponseBody> request, ResultCallBack callback) {
         try {
             Response<ResponseBody> response = request.execute();
             if (response.isSuccessful()) {
@@ -30,7 +30,7 @@ class CDAConnection {
     }
 
 
-    final HashMap<String, Object> calculateHeader(HashMap<String, String> headers, HashMap<String, Object> params) {
+    final protected HashMap<String, Object> calculateHeader(HashMap<String, String> headers, HashMap<String, Object> params) {
         if (headers.containsKey("environment")) {
             String env = headers.get("environment");
             params.put("environment", env);

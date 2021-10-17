@@ -19,30 +19,21 @@ public class Entry extends CDAConnection {
     private ContentType contentTypeInstance = null;
     private String[] tags = null;
     protected String uid = null;
-    protected JSONObject resultJson = null;
-    protected String ownerEmailId = null;
-    protected String ownerUid = null;
-    protected String title = null;
-    protected String url = null;
-    protected String language = null;
 
     private JSONArray referenceArray;
-    public JSONObject otherPostJSON;
+    public JSONObject queryParams;
     private JSONArray objectUidForOnly;
     private JSONArray objectUidForExcept;
     private JSONObject onlyJsonObject;
     private JSONObject exceptJsonObject;
 
-    private String rteContent = null;
-
     private Entry() {
     }
 
-    protected Entry(@NotNull String contentTypeName,
-                    @NotNull HashMap<String, String> headerMap) {
+    protected Entry(@NotNull String contentTypeName, @NotNull HashMap<String, String> headerMap) {
         this.contentTypeName = contentTypeName;
         this.stackHeader = headerMap;
-        this.otherPostJSON = new JSONObject();
+        this.queryParams = new JSONObject();
     }
 
 
@@ -63,7 +54,7 @@ public class Entry extends CDAConnection {
     public Entry setLocale(String locale) {
         if (locale != null) {
             try {
-                otherPostJSON.put("locale", locale);
+                queryParams.put("locale", locale);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -100,7 +91,7 @@ public class Entry extends CDAConnection {
                     referenceArray = new JSONArray();
                 }
                 referenceArray.put(referenceField);
-                otherPostJSON.put("include[]", referenceArray);
+                queryParams.put("include[]", referenceArray);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -118,7 +109,7 @@ public class Entry extends CDAConnection {
                 for (int i = 0; i < referenceFields.length; i++) {
                     referenceArray.put(referenceFields[i]);
                 }
-                otherPostJSON.put("include[]", referenceArray);
+                queryParams.put("include[]", referenceArray);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -264,10 +255,10 @@ public class Entry extends CDAConnection {
 
     private void setIncludeJSON(JSONObject mainJson, ResultCallBack callBack){
         try {
-            Iterator<String> iterator = otherPostJSON.keys();
+            Iterator<String> iterator = queryParams.keys();
             while (iterator.hasNext()) {
                 String key = iterator.next();
-                Object value = otherPostJSON.get(key);
+                Object value = queryParams.get(key);
                 mainJson.put(key, value);
             }
 
@@ -325,7 +316,7 @@ public class Entry extends CDAConnection {
 
         if(key != null && value != null) {
             try {
-                otherPostJSON.put(key, value);
+                queryParams.put(key, value);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -337,7 +328,7 @@ public class Entry extends CDAConnection {
 
     public Entry includeReferenceContentTypeUID(){
         try {
-            otherPostJSON.put("include_reference_content_type_uid", "true");
+            queryParams.put("include_reference_content_type_uid", "true");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -347,11 +338,11 @@ public class Entry extends CDAConnection {
 
     public Entry includeContentType(){
         try {
-            if (otherPostJSON.has("include_schema")){
-                otherPostJSON.remove("include_schema");
+            if (queryParams.has("include_schema")) {
+                queryParams.remove("include_schema");
             }
-            otherPostJSON.put("include_content_type",true);
-            otherPostJSON.put("include_global_field_schema",true);
+            queryParams.put("include_content_type", true);
+            queryParams.put("include_global_field_schema", true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -360,19 +351,19 @@ public class Entry extends CDAConnection {
 
 
     public Entry includeFallback(){
-        otherPostJSON.put("include_fallback", true);
+        queryParams.put("include_fallback", true);
         return this;
     }
 
 
     public Entry includeEmbeddedItems() {
-        otherPostJSON.put("include_embedded_items[]", "BASE");
+        queryParams.put("include_embedded_items[]", "BASE");
         return this;
     }
 
 
     public Entry includeBranch() {
-        otherPostJSON.put("include_branch", true);
+        queryParams.put("include_branch", true);
         return this;
     }
 
