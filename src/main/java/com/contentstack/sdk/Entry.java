@@ -1,334 +1,171 @@
 package com.contentstack.sdk;
 
 import com.contentstack.sdk.callback.ResultCallBack;
+import okhttp3.ResponseBody;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import retrofit2.Call;
+import retrofit2.Retrofit;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
 
-public class Entry extends CDAConnection {
+public class Entry extends Queryable {
 
-    private String contentTypeName = null;
-    private HashMap<String, String> stackHeader = null;
-    protected LinkedHashMap<String, Object> formHeader = null;
-    protected HashMap<String, Object> owner = null;
-    protected HashMap<String, Object> _metadata = null;
-
-    private ContentType contentTypeInstance = null;
-    private String[] tags = null;
-    protected String uid = null;
+    protected HashMap<String, String> headers = new HashMap<>();
+    protected String uid;
+    protected Service service;
+    protected final String contentTypeUid;
+    protected HashMap<String, Object> entryParam;
 
     private JSONArray referenceArray;
-    public JSONObject queryParams;
     private JSONArray objectUidForOnly;
     private JSONArray objectUidForExcept;
     private JSONObject onlyJsonObject;
     private JSONObject exceptJsonObject;
 
-    private Entry() {
-    }
-
-    protected Entry(@NotNull String contentTypeName, @NotNull HashMap<String, String> headerMap) {
-        this.contentTypeName = contentTypeName;
-        this.stackHeader = headerMap;
-        this.queryParams = new JSONObject();
+    protected Entry() throws IllegalAccessException {
+        throw new IllegalAccessException("Invalid Access");
     }
 
 
-    public void setHeader(String key, String value) {
+    protected Entry(@NotNull Retrofit retrofit,
+                    @NotNull HashMap<String, String> headers,
+                    @NotNull String contentTypeUid,
+                    @NotNull String entryUid) {
+        Objects.requireNonNull(entryUid, "entry uid can not be Null");
+        this.service = retrofit.create(Service.class);
+        this.headers.putAll(headers);
+        this.contentTypeUid = contentTypeUid;
+        this.uid = entryUid;
+        this.entryParam = new HashMap<>();
+    }
+
+    protected void setUid(@NotNull String uid) {
+        this.uid = uid;
+    }
+
+    public void addHeader(String key, String value) {
         if (!key.isEmpty() && !value.isEmpty()) {
-            this.stackHeader.put(key, value);
+            this.headers.put(key, value);
         }
     }
-
 
     public void removeHeader(String key) {
         if (!key.isEmpty()) {
-            this.stackHeader.remove(key);
+            this.headers.remove(key);
         }
     }
 
-
-    public Entry setLocale(String locale) {
-        if (locale != null) {
-            try {
-                queryParams.put("locale", locale);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
+    public Entry setLocale(@NotNull String locale) {
+        entryParam.put("locale", locale);
         return this;
     }
 
 
-    public Entry except(String[] fieldUid){
-        try{
-            if(fieldUid != null && fieldUid.length > 0){
+    public Entry except(@NotNull String[] fieldUid) {
+        if (fieldUid.length > 0) {
 
-                if(objectUidForExcept == null){
-                    objectUidForExcept = new JSONArray();
-                }
-
-                int count = fieldUid.length;
-                for(int i = 0; i < count; i++){
-                    objectUidForExcept.put(fieldUid[i]);
-                }
+            if (objectUidForExcept == null) {
+                objectUidForExcept = new JSONArray();
             }
-        }catch(Exception e) {
-            e.printStackTrace();
+            for (String s : fieldUid) {
+                objectUidForExcept.put(s);
+            }
         }
         return this;
     }
 
 
-    public Entry includeReference(String referenceField) {
-        try {
-            if (!referenceField.isEmpty()) {
-                if (referenceArray == null) {
-                    referenceArray = new JSONArray();
-                }
+    public void includeReference(@NotNull String referenceField) {
+        if (!referenceField.isEmpty()) {
+            if (referenceArray == null) {
+                referenceArray = new JSONArray();
+            }
+            referenceArray.put(referenceField);
+            entryParam.put("include[]", referenceArray);
+        }
+    }
+
+
+    public Entry includeReference(@NotNull String[] referenceFields) {
+        if (referenceFields.length > 0) {
+            if (referenceArray == null) {
+                referenceArray = new JSONArray();
+            }
+            for (String referenceField : referenceFields) {
                 referenceArray.put(referenceField);
-                queryParams.put("include[]", referenceArray);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            entryParam.put("include[]", referenceArray);
         }
         return this;
     }
 
 
-    public Entry includeReference(String[] referenceFields) {
-        try {
-            if (referenceFields != null && referenceFields.length > 0) {
-                if (referenceArray == null) {
-                    referenceArray = new JSONArray();
-                }
-                for (int i = 0; i < referenceFields.length; i++) {
-                    referenceArray.put(referenceFields[i]);
-                }
-                queryParams.put("include[]", referenceArray);
+    public Entry only(@NotNull String[] fieldUid) {
+        if (fieldUid.length > 0) {
+            if (objectUidForOnly == null) {
+                objectUidForOnly = new JSONArray();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            for (String s : fieldUid) {
+                objectUidForOnly.put(s);
+            }
         }
         return this;
     }
 
 
-    public Entry only(String[] fieldUid) {
-        try{
-            if (fieldUid != null && fieldUid.length > 0) {
-                if(objectUidForOnly == null){
-                    objectUidForOnly = new JSONArray();
-                }
-
-                int count = fieldUid.length;
-                for(int i = 0; i < count; i++){
-                    objectUidForOnly.put(fieldUid[i]);
-                }
-            }
-        }catch(Exception e) {
-            e.printStackTrace();
+    public Entry onlyWithReferenceUid(@NotNull ArrayList<String> fieldUid, @NotNull String referenceFieldUid) {
+        if (onlyJsonObject == null) {
+            onlyJsonObject = new JSONObject();
         }
+        JSONArray fieldValueArray = new JSONArray();
+        for (String s : fieldUid) {
+            fieldValueArray.put(s);
+        }
+        onlyJsonObject.put(referenceFieldUid, fieldValueArray);
+        includeReference(referenceFieldUid);
+
         return this;
     }
 
 
-    public Entry onlyWithReferenceUid(ArrayList<String> fieldUid, String referenceFieldUid){
-        try{
-            if(fieldUid != null && referenceFieldUid != null){
-                if(onlyJsonObject == null){
-                    onlyJsonObject = new JSONObject();
-                }
-                JSONArray fieldValueArray = new JSONArray();
-                int count = fieldUid.size();
-                for(int i = 0; i < count; i++){
-                    fieldValueArray.put(fieldUid.get(i));
-                }
-
-                onlyJsonObject.put(referenceFieldUid, fieldValueArray);
-                includeReference(referenceFieldUid);
-            }
-        }catch(Exception e) {
-            e.printStackTrace();
+    public Entry exceptWithReferenceUid(@NotNull ArrayList<String> fieldUid,
+                                        @NotNull String referenceFieldUid) {
+        if (exceptJsonObject == null) {
+            exceptJsonObject = new JSONObject();
         }
-        return this;
-    }
-
-
-    public Entry exceptWithReferenceUid(ArrayList<String> fieldUid, String referenceFieldUid){
-        try{
-            if(fieldUid != null && referenceFieldUid != null){
-                if(exceptJsonObject == null){
-                    exceptJsonObject = new JSONObject();
-                }
-                JSONArray fieldValueArray = new JSONArray();
-                int count = fieldUid.size();
-                for(int i = 0; i < count; i++){
-                    fieldValueArray.put(fieldUid.get(i));
-                }
-
-                exceptJsonObject.put(referenceFieldUid, fieldValueArray);
-                includeReference(referenceFieldUid);
-            }
-        }catch(Exception e) {
-            e.printStackTrace();
+        JSONArray fieldValueArray = new JSONArray();
+        for (String s : fieldUid) {
+            fieldValueArray.put(s);
         }
+        exceptJsonObject.put(referenceFieldUid, fieldValueArray);
+        includeReference(referenceFieldUid);
         return this;
-    }
-
-
-    protected void setTags(String[] tags) {
-        this.tags = tags;
-    }
-
-
-    protected void setUid(String uid) {
-        this.uid = uid;
     }
 
 
     public void fetch(ResultCallBack callBack) {
-//        try {
-//            if (!uid.isEmpty()) {
-//                String URL = "/" + contentTypeInstance.stackInstance.VERSION + "/content_types/" + contentTypeName + "/entries/" + uid;
-//                LinkedHashMap<String, Object> headers = getHeader(localHeader);
-//                LinkedHashMap<String, String> headerAll = new LinkedHashMap<String, String>();
-//                JSONObject urlQueries = new JSONObject();
-//                if (headers != null && headers.size() > 0) {
-//                    for (Map.Entry<String, Object> entry : headers.entrySet()) {
-//                        headerAll.put(entry.getKey(), (String) entry.getValue());
-//                    }
-//                    if(headers.containsKey("environment")){
-//                        urlQueries.put("environment", headers.get("environment"));
-//                    }
-//                }
-//                fetchFromNetwork(URL, urlQueries, callBack);
-//            }
-//        }catch(Exception e) {
-//            // TODO: Exception callback
-//        }
+        entryParam.put("environment", this.headers.get("environment"));
+        this.headers.remove("environment");
+        Call<ResponseBody> request = this.service
+                .entry(this.contentTypeUid, this.uid, this.headers, this.entryParam);
+        request(request, callBack);
     }
 
 
-    private void fetchFromNetwork(String URL, JSONObject urlQueries, ResultCallBack callBack) {
-//        try{
-//
-//            JSONObject mainJson = new JSONObject();
-//            setIncludeJSON(urlQueries, callBack);
-//            mainJson.put("query", urlQueries);
-//            mainJson.put("_method", Constants.RequestMethod.GET.toString());
-//            HashMap<String, Object> urlParams = getUrlParams(mainJson);
-//            new CSBackgroundTask(this, contentTypeInstance.stackInstance, CSController.FETCHENTRY, URL, getHeader(localHeader), urlParams, new JSONObject(), Constants.callController.ENTRY.toString(), false, Constants.RequestMethod.GET, callBack);
-//
-//        }catch(Exception e){
-//            throwException(null, e, callBack);
-//        }
-    }
-
-
-    private LinkedHashMap<String, Object> getUrlParams(JSONObject jsonMain) {
-
-        JSONObject queryJSON = jsonMain.optJSONObject("query");
-        LinkedHashMap<String, Object> hashMap = new LinkedHashMap<>();
-
-        if (queryJSON != null && queryJSON.length() > 0) {
-            Iterator<String> iter = queryJSON.keys();
-            while (iter.hasNext()) {
-                String key = iter.next();
-                try {
-                    Object value = queryJSON.opt(key);
-                    hashMap.put(key, value);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            return hashMap;
-        }
-
-        return null;
-    }
-
-
-    private void setIncludeJSON(JSONObject mainJson, ResultCallBack callBack){
-        try {
-            Iterator<String> iterator = queryParams.keys();
-            while (iterator.hasNext()) {
-                String key = iterator.next();
-                Object value = queryParams.get(key);
-                mainJson.put(key, value);
-            }
-
-            if(objectUidForOnly!= null && objectUidForOnly.length() > 0){
-                mainJson.put("only[BASE][]", objectUidForOnly);
-                objectUidForOnly = null;
-            }
-
-            if(objectUidForExcept != null && objectUidForExcept.length() > 0){
-                mainJson.put("except[BASE][]", objectUidForExcept);
-                objectUidForExcept = null;
-            }
-
-            if(exceptJsonObject != null && exceptJsonObject.length() > 0){
-                mainJson.put("except", exceptJsonObject);
-                exceptJsonObject = null;
-            }
-
-            if(onlyJsonObject != null && onlyJsonObject.length() > 0){
-                mainJson.put("only", onlyJsonObject);
-                onlyJsonObject = null;
-            }
-        }catch(Exception e){
-            //TODO: make Error callback
-        }
-    }
-
-
-    private LinkedHashMap<String, Object> getHeader(LinkedHashMap<String, Object> localHeader) {
-        LinkedHashMap<String, Object> mainHeader = formHeader;
-        LinkedHashMap<String, Object> classHeaders = new LinkedHashMap<>();
-        if(localHeader != null && localHeader.size() > 0){
-            if(mainHeader != null && mainHeader.size() > 0) {
-                for (Map.Entry<String, Object> entry : localHeader.entrySet()) {
-                    String key = entry.getKey();
-                    classHeaders.put(key, entry.getValue());
-                }
-                for (Map.Entry<String, Object> entry : mainHeader.entrySet()) {
-                    String key = entry.getKey();
-                    if(!classHeaders.containsKey(key)) {
-                        classHeaders.put(key, entry.getValue());
-                    }
-                }
-                return classHeaders;
-            }else{
-                return localHeader;
-            }
-        }else{
-            return formHeader;
-        }
-    }
-
-
-    public Entry addParam(String key, String value){
-
-        if(key != null && value != null) {
-            try {
-                queryParams.put(key, value);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
+    public Entry addParam(@NotNull String paramKey, @NotNull String value) {
+        entryParam.put(paramKey, value);
         return this;
     }
 
 
-    public Entry includeReferenceContentTypeUID(){
+    public Entry includeReferenceContentTypeUID() {
         try {
-            queryParams.put("include_reference_content_type_uid", "true");
+            entryParam.put("include_reference_content_type_uid", "true");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -336,35 +173,32 @@ public class Entry extends CDAConnection {
     }
 
 
-    public Entry includeContentType(){
-        try {
-            if (queryParams.has("include_schema")) {
-                queryParams.remove("include_schema");
-            }
-            queryParams.put("include_content_type", true);
-            queryParams.put("include_global_field_schema", true);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public Entry includeContentType() {
+        if (entryParam.containsKey("include_schema")) {
+            entryParam.remove("include_schema");
         }
+        entryParam.put("include_content_type", true);
+        entryParam.put("include_global_field_schema", true);
         return this;
     }
 
 
-    public Entry includeFallback(){
-        queryParams.put("include_fallback", true);
+    public Entry includeFallback() {
+        entryParam.put("include_fallback", true);
         return this;
     }
 
 
     public Entry includeEmbeddedItems() {
-        queryParams.put("include_embedded_items[]", "BASE");
+        entryParam.put("include_embedded_items[]", "BASE");
         return this;
     }
 
 
     public Entry includeBranch() {
-        queryParams.put("include_branch", true);
+        entryParam.put("include_branch", true);
         return this;
     }
+
 
 }

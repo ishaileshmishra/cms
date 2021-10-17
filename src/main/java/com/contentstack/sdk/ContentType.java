@@ -5,26 +5,31 @@ import okhttp3.ResponseBody;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import retrofit2.Call;
+import retrofit2.Retrofit;
 
 import java.util.HashMap;
 
 
 public class ContentType extends CDAConnection {
 
-
     protected String contentTypeUid;
+    protected Retrofit retrofit;
     protected Service service;
+    protected CDAConnection instance;
     private HashMap<String, String> stackHeader;
 
-    public ContentType() {
+    private ContentType() throws IllegalAccessException {
+        throw new IllegalAccessException("Invalid Access");
     }
 
-    protected ContentType(@NotNull Service service, @NotNull String contentTypeUid,
-                          @NotNull HashMap<String, String> headerMap) {
+    protected ContentType(@NotNull Retrofit retrofit,
+                          @NotNull HashMap<String, String> headerMap,
+                          @NotNull String contentTypeUid) {
         if (contentTypeUid.isEmpty()) {
-            throw new IllegalArgumentException("content_type_uid can not be empty");
+            throw new IllegalArgumentException("Invalid argument, contentTypeUid can not be empty");
         }
-        this.service = service;
+        this.retrofit = retrofit;
+        this.service = retrofit.create(Service.class);
         this.contentTypeUid = contentTypeUid;
         this.stackHeader = headerMap;
     }
@@ -43,16 +48,8 @@ public class ContentType extends CDAConnection {
 
 
     public Entry entry(@NotNull String entryUid) {
-        Entry entry = new Entry(contentTypeUid, this.stackHeader);
-        entry.setUid(entryUid);
-        return entry;
+        return new Entry(this.retrofit, this.stackHeader, contentTypeUid, entryUid);
     }
-
-
-    protected Entry entry() {
-        return new Entry(contentTypeUid, stackHeader);
-    }
-
 
     public Query query() {
         return new Query(contentTypeUid, stackHeader);

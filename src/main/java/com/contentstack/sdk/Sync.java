@@ -143,12 +143,10 @@ public class Sync extends CDAConnection {
     }
 
 
-    public void all(
-            @NotNull String contentType,
-            @NotNull Date from_date,
-            @NotNull String languageCode,
-            @NotNull PublishType publishType,
-            @NotNull ResultCallBack callBack) {
+    public void all(@NotNull String contentType, @NotNull Date from_date,
+                    @NotNull String languageCode,
+                    @NotNull PublishType publishType,
+                    @NotNull ResultCallBack callBack) {
         String startFromDate = convertUTCToISO(from_date);
 
         if (queryParams == null) {
@@ -169,8 +167,8 @@ public class Sync extends CDAConnection {
 
 
     private void initiate(ResultCallBack callBack) {
-        Map<String, Object> queryParam = calculateHeader(headerMap, queryParams);
-        Call<ResponseBody> request = service.synchronization(headerMap, queryParam);
+        Map<String, Object> queryParam = removeEnv(headerMap, queryParams);
+        Call<ResponseBody> request = service.sync(headerMap, queryParam);
         request(request, callBack);
     }
 

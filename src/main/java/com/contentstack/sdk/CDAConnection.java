@@ -30,10 +30,11 @@ public class CDAConnection {
     }
 
 
-    final protected HashMap<String, Object> calculateHeader(HashMap<String, String> headers, HashMap<String, Object> params) {
+    final protected HashMap<String, Object> removeEnv(
+            HashMap<String, String> headers,
+            HashMap<String, Object> params) {
         if (headers.containsKey("environment")) {
-            String env = headers.get("environment");
-            params.put("environment", env);
+            params.put("environment", headers.get("environment"));
         }
         return params;
     }

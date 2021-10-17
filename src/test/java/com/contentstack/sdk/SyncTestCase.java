@@ -4,7 +4,6 @@ import com.contentstack.sdk.model.Error;
 import okhttp3.ResponseBody;
 import org.junit.jupiter.api.Test;
 import retrofit2.Response;
-import java.io.IOException;
 
 public class SyncTestCase {
 
@@ -14,7 +13,7 @@ public class SyncTestCase {
                 "blt2334343443", "cs4i34ifnerifnerin", "dev").build();
         stack.sync().init(new ResultCallBack() {
             @Override
-            public void onSuccess(Response<ResponseBody> body) throws IOException {
+            public void onSuccess(Response<ResponseBody> body) {
 
             }
 

@@ -25,7 +25,7 @@ public interface Service {
             @QueryMap JSONObject query);
 
     @GET("v3/stacks/sync")
-    Call<ResponseBody> synchronization(
+    Call<ResponseBody> sync(
             @HeaderMap Map<String, String> header,
             @QueryMap Map<String, Object> query);
 
@@ -51,11 +51,11 @@ public interface Service {
             @QueryMap Map<String, Object> query);
 
     @GET("v3/content_types/{content_type_uid}/entries/{entry_uid}")
-    Call<ResponseBody> getEntry(
+    Call<ResponseBody> entry(
             @Path("content_type_uid") String _uid,
             @Path("entry_uid") String _entryUid,
             @HeaderMap HashMap<String, String> header,
-            @QueryMap JSONObject query);
+            @QueryMap Map<String, Object> query);
 
     @GET("v3/content_types/{content_type_uid}/entries")
     Call<ResponseBody> findQuery(

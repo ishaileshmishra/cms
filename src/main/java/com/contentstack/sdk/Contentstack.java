@@ -14,7 +14,7 @@ public class Contentstack extends CDAConnection {
     protected Retrofit retrofit;
 
     public ContentType contentType(@NotNull String contentTypeUid) {
-        return new ContentType(service, contentTypeUid, headerMap);
+        return new ContentType(retrofit, headerMap, contentTypeUid);
     }
 
     public Asset asset(String uid) {
@@ -31,7 +31,7 @@ public class Contentstack extends CDAConnection {
         return new Sync(service, headerMap);
     }
 
-    private Contentstack() throws IllegalAccessException {
+    protected Contentstack() throws IllegalAccessException {
         throw new IllegalAccessException("Illegal Access contentstack=private");
     }
 
@@ -41,8 +41,9 @@ public class Contentstack extends CDAConnection {
         this.service = builder.service;
     }
 
-    public static class Stack {
+    public static class Stack extends CDAConnection {
         private String branch;
+        private CDAConnection instance;
         private String HOST = Constants.HOST;
         private Region region = Region.US;
         private Service service = null;
