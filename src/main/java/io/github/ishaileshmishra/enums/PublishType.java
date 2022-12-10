@@ -1,5 +1,11 @@
 package io.github.ishaileshmishra.enums;
 
+/**
+ * <p>PublishType class.</p>
+ *
+ * @author shaileshmishra
+ * @version $Id: $Id
+ */
 public enum PublishType {
     entry_published,
     entry_unpublished,

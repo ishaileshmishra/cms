@@ -9,8 +9,20 @@ import retrofit2.Response;
 import java.io.IOException;
 import java.util.HashMap;
 
+/**
+ * <p>CDAConnection class.</p>
+ *
+ * @author shaileshmishra
+ * @version $Id: $Id
+ */
 public class CDAConnection {
 
+    /**
+     * <p>request.</p>
+     *
+     * @param request a {@link retrofit2.Call} object
+     * @param callback a {@link io.github.ishaileshmishra.callback.ResultCallBack} object
+     */
     final protected void request(Call<ResponseBody> request, ResultCallBack callback) {
         try {
             Response<ResponseBody> response = request.execute();
@@ -29,6 +41,13 @@ public class CDAConnection {
     }
 
 
+    /**
+     * <p>removeEnv.</p>
+     *
+     * @param headers a {@link java.util.HashMap} object
+     * @param params a {@link java.util.HashMap} object
+     * @return a {@link java.util.HashMap} object
+     */
     final protected HashMap<String, Object> removeEnv(
             HashMap<String, String> headers,
             HashMap<String, Object> params) {

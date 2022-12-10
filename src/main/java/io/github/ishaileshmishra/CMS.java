@@ -7,30 +7,63 @@ import retrofit2.Retrofit;
 import java.util.HashMap;
 import java.util.Objects;
 
+/**
+ * <p>CMS class.</p>
+ *
+ * @author shaileshmishra
+ * @version $Id: $Id
+ */
 public class CMS extends CDAConnection {
 
     private final HashMap<String, String> headerMap;
     private final Service service;
     protected Retrofit retrofit;
 
+    /**
+     * <p>contentType.</p>
+     *
+     * @param contentTypeUid a {@link java.lang.String} object
+     * @return a {@link io.github.ishaileshmishra.ContentType} object
+     */
     public ContentType contentType(@NotNull String contentTypeUid) {
         return new ContentType(retrofit, headerMap, contentTypeUid);
     }
 
+    /**
+     * <p>asset.</p>
+     *
+     * @param uid a {@link java.lang.String} object
+     * @return a {@link io.github.ishaileshmishra.Asset} object
+     */
     public Asset asset(String uid) {
         return new Asset(uid);
     }
 
+    /**
+     * <p>assetLibrary.</p>
+     *
+     * @return a {@link io.github.ishaileshmishra.AssetLibrary} object
+     */
     public AssetLibrary assetLibrary() {
         AssetLibrary library = new AssetLibrary();
         library.setStackInstance(this.service, headerMap);
         return library;
     }
 
+    /**
+     * <p>sync.</p>
+     *
+     * @return a {@link io.github.ishaileshmishra.Sync} object
+     */
     public Sync sync() {
         return new Sync(service, headerMap);
     }
 
+    /**
+     * <p>Constructor for CMS.</p>
+     *
+     * @throws java.lang.IllegalAccessException if any.
+     */
     protected CMS() throws IllegalAccessException {
         throw new IllegalAccessException("Illegal Access contentstack=private");
     }
@@ -52,7 +85,7 @@ public class CMS extends CDAConnection {
 
 
         public Stack(String apiKey, String deliveryToken, String environment) {
-            headerMap = new HashMap<>();
+            headerMap = new HashMap<String, String>();
             _validate(apiKey, deliveryToken, environment);
             headerMap.put("api_key", apiKey);
             headerMap.put("access_token", deliveryToken);
@@ -60,9 +93,10 @@ public class CMS extends CDAConnection {
         }
 
         private void _validate(String apiKey, String deliveryToken, String environment) {
-            Objects.requireNonNull(apiKey, "apiKey Can not be Null");
-            Objects.requireNonNull(deliveryToken, "deliveryToken Can not be Null");
-            Objects.requireNonNull(environment, "environment Can not be Null");
+
+            Objects.requireNonNull(apiKey, "apiKey must not be Null");
+            Objects.requireNonNull(deliveryToken, "deliveryToken must not be Null");
+            Objects.requireNonNull(environment, "environment must not be Null");
         }
 
         public Stack setBranch(@NotNull String _branch) {

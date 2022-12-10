@@ -9,16 +9,30 @@ import retrofit2.Call;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * <p>AssetLibrary class.</p>
+ *
+ * @author shaileshmishra
+ * @version $Id: $Id
+ */
 public class AssetLibrary extends CDAConnection {
     private final HashMap<String, String> stackHeader;
     public Map<String, Object> urlQueries;
     public Service service;
 
+    /**
+     * <p>Constructor for AssetLibrary.</p>
+     */
     protected AssetLibrary() {
-        this.stackHeader = new HashMap<>();
-        this.urlQueries = new HashMap<>();
+        this.stackHeader = new HashMap<String, String>();
+        this.urlQueries = new HashMap<String, Object>();
     }
 
+    /**
+     * <p>fetchAll.</p>
+     *
+     * @param callback a {@link io.github.ishaileshmishra.callback.ResultCallBack} object
+     */
     public void fetchAll(ResultCallBack callback) {
         if (this.stackHeader.containsKey("environment")) {
             urlQueries.put("environment", this.stackHeader.get("environment"));
@@ -29,11 +43,23 @@ public class AssetLibrary extends CDAConnection {
         request(request, callback);
     }
 
+    /**
+     * <p>setStackInstance.</p>
+     *
+     * @param service a {@link io.github.ishaileshmishra.Service} object
+     * @param headers a {@link java.util.HashMap} object
+     */
     protected void setStackInstance(Service service, HashMap<String, String> headers) {
         this.service = service;
         this.stackHeader.putAll(headers);
     }
 
+    /**
+     * <p>setHeader.</p>
+     *
+     * @param key a {@link java.lang.String} object
+     * @param value a {@link java.lang.String} object
+     */
     public void setHeader(String key, String value) {
         if (!key.isEmpty() && !value.isEmpty()) {
             stackHeader.put(key, value);
@@ -41,6 +67,11 @@ public class AssetLibrary extends CDAConnection {
     }
 
 
+    /**
+     * <p>removeHeader.</p>
+     *
+     * @param key a {@link java.lang.String} object
+     */
     public void removeHeader(String key) {
         if (!key.isEmpty()) {
             stackHeader.remove(key);
@@ -48,6 +79,13 @@ public class AssetLibrary extends CDAConnection {
     }
 
 
+    /**
+     * <p>sort.</p>
+     *
+     * @param key a {@link java.lang.String} object
+     * @param orderby a {@link io.github.ishaileshmishra.enums.ORDER_BY} object
+     * @return a {@link io.github.ishaileshmishra.AssetLibrary} object
+     */
     public AssetLibrary sort(String key, ORDER_BY orderby) {
         try {
             switch (orderby) {
@@ -70,6 +108,11 @@ public class AssetLibrary extends CDAConnection {
         throw new RuntimeException(query + " throws " + executionException + " - " + e.getLocalizedMessage());
     }
 
+    /**
+     * <p>includeCount.</p>
+     *
+     * @return a {@link io.github.ishaileshmishra.AssetLibrary} object
+     */
     public AssetLibrary includeCount() {
         try {
             urlQueries.put("include_count", "true");
@@ -80,6 +123,11 @@ public class AssetLibrary extends CDAConnection {
     }
 
 
+    /**
+     * <p>includeRelativeUrl.</p>
+     *
+     * @return a {@link io.github.ishaileshmishra.AssetLibrary} object
+     */
     public AssetLibrary includeRelativeUrl() {
         try {
             urlQueries.put("relative_urls", "true");
@@ -90,6 +138,11 @@ public class AssetLibrary extends CDAConnection {
     }
 
 
+    /**
+     * <p>includeFallback.</p>
+     *
+     * @return a {@link io.github.ishaileshmishra.AssetLibrary} object
+     */
     public AssetLibrary includeFallback() {
         urlQueries.put("include_fallback", true);
         return this;

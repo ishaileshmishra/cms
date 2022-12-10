@@ -11,7 +11,7 @@
     <artifactId>cms</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>CMS-java</name>
+    <name>cms</name>
     <description>Java SDK for Content Delivery API, CMS with an API-first approach
     </description>
     <url>https://github.com/ishaileshmishra/cms/</url>
@@ -23,11 +23,11 @@
     </parent>
 
     <scm>
-        <url>https://github.com/ishaileshmishra/cms</url>
         <connection>scm:git:git://github.com/ishaileshmishra/cms.git</connection>
         <developerConnection>scm:git:ssh://github.com:ishaileshmishra/cms.git</developerConnection>
-        <tag>HEAD</tag>
+        <url>http://github.com/ishaileshmishra/cms/tree/master</url>
     </scm>
+
 
     <issueManagement>
         <system>GitHub Issues</system>
@@ -41,6 +41,21 @@
         </license>
     </licenses>
 
+    <developers>
+        <developer>
+            <name>Shailesh Mishra</name>
+            <email>mshaileshr@gmail.com</email>
+            <organization>cms</organization>
+            <organizationUrl>https://ishaileshmishra.medium.com/</organizationUrl>
+        </developer>
+
+        <developer>
+            <name>shaileshmishra</name>
+            <email>mshaileshr@gmail.com</email>
+            <organization>shaileshmishra</organization>
+            <organizationUrl>https://ishaileshmishra.medium.com/</organizationUrl>
+        </developer>
+    </developers>
 
     <organization>
         <name>shaileshmishra.</name>
@@ -57,26 +72,10 @@
         <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
     </properties>
 
-    <developers>
-        <developer>
-            <name>shaileshmishra</name>
-            <email>mshaileshr@gmail.com</email>
-            <organization>CMS</organization>
-            <organizationUrl>https://ishaileshmishra.medium.com/</organizationUrl>
-        </developer>
-
-        <developer>
-            <name>shaileshmishra</name>
-            <email>mshaileshr@gmail.com</email>
-            <organization>shaileshmishra</organization>
-            <organizationUrl>https://ishaileshmishra.medium.com/</organizationUrl>
-        </developer>
-    </developers>
-
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
         <repository>
             <id>ossrh</id>
@@ -122,32 +121,10 @@
 
     <build>
         <plugins>
-            <!--
-            # Run tests and generate .xml reports
-            mvn test
-            # Convert .xml reports into .html report, but without the CSS or images
-            mvn surefire-report:report-only
-            # Put the CSS and images where they need to be without the rest of the
-            # time-consuming stuff
-            mvn surefire-report:report site -DgenerateReports=false
-            -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>${surefire-report-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report-only</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>${maven-source-plugin.version}</version>
+                <version>2.2.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -160,38 +137,16 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven-javadoc-plugin.version}</version>
+                <version>3.4.1</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
                         <goals>
                             <goal>jar</goal>
                         </goals>
-                        <configuration>
-                            <additionalOptions>-Xdoclint:none</additionalOptions>
-                            <use>false</use>
-                            <use>false</use>
-                            <source>1.8</source>
-                            <links>
-                                <link>http://docs.oracle.com/javase/7/docs/api/</link>
-                                <link>http://docs.oracle.com/javase/7/docs/api/</link>
-                            </links>
-                            <doclint>none</doclint>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.3</version>
-            </plugin>
-
-            <!--
-            Signs all of a project's attached artifacts with GnuPG.
-            You need to have previously configured the default key.
-            gpg also needs to be on the search path.
-            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
@@ -206,24 +161,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--
-            Sometimes when you may need to compile a certain project to a different
-            version than what you are currently using. The javac can accept such command
-            using -source and -target. The Compiler Plugin can also be configured to
-            provide these options during compilation
-            -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <compilerArgument>-Xlint:all</compilerArgument>
-                    <showWarnings>true</showWarnings>
-                    <showDeprecation>true</showDeprecation>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -231,46 +168,24 @@
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
             </plugin>
-            <!--
-            This plugin is used to release a project with Maven, saving a lot of repetitive, manual work.
-            Releasing a project is made in two steps: prepare and perform.
-            -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-                <configuration>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <useReleaseProfile>false</useReleaseProfile>
-                    <releaseProfiles>release</releaseProfiles>
-                    <goals>deploy</goals>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.5</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>report</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
         </plugins>
     </build>
 
+    <reporting>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.4.1</version>
+            <configuration>
+                <stylesheetfile>${basedir}/src/main/javadoc/stylesheet.css</stylesheetfile>
+                <show>public</show>
+            </configuration>
+        </plugin>
+    </plugins>
+</reporting>
 </project>
