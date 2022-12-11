@@ -1,15 +1,9 @@
 package io.github.ishaileshmishra;
 
 import io.github.cdimascio.dotenv.Dotenv;
-import io.github.ishaileshmishra.callback.ResultCallBack;
-import io.github.ishaileshmishra.model.Error;
-import okhttp3.ResponseBody;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import retrofit2.Response;
-
-import java.io.IOException;
 
 public class CMSUnitTest {
     private static final Dotenv env = Dotenv.load();
@@ -42,17 +36,6 @@ public class CMSUnitTest {
     @Test
     void entry() {
         Entry entry = CMS.contentType("product").entry("bltfce1580ccc988d68");
-        entry.includeBranch().fetch(new ResultCallBack() {
-            @Override
-            public void onSuccess(Response<ResponseBody> body) throws IOException {
-                System.out.println(body.body().string());
-            }
-
-            @Override
-            public void onFailure(Error error) {
-                System.out.println(error.getErrorDetail());
-            }
-        });
     }
 
     @Test
