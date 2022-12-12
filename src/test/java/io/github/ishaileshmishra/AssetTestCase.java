@@ -17,7 +17,7 @@ public class AssetTestCase {
 
     AssetLibrary allAsset = null;
     Logger logger = Logger.getLogger(AssetTestCase.class.getName());
-
+///////////////////
     @BeforeAll
     void testAssetSetup() {
         Dotenv dotenv = Dotenv.load();
