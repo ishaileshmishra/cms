@@ -66,40 +66,40 @@
     </properties>
 
 
-    <repositories>
+<!--    <repositories>-->
+
+<!--        <repository>-->
+<!--            <id>shaileshmishra</id>-->
+<!--            <name>Maven Snapshot</name>-->
+<!--            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>-->
+<!--        </repository>-->
+
+<!--        <repository>-->
+<!--            <id>maven</id>-->
+<!--            <name>Maven Staging Packages</name>-->
+<!--            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
+<!--        </repository>-->
+
+<!--        <repository>-->
+<!--            <id>github</id>-->
+<!--            <name>GitHub Packages</name>-->
+<!--            <url>https://maven.pkg.github.com/ishaileshmishra/cms</url>-->
+<!--        </repository>-->
+<!--    </repositories>-->
+
+    <distributionManagement>
+
+        <snapshotRepository>
+            <id>shaileshmishra</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
 
         <repository>
             <id>shaileshmishra</id>
-            <name>Maven Snapshot</name>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-        </repository>
-
-        <repository>
-            <id>maven</id>
-            <name>Maven Staging Packages</name>
             <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
 
-        <repository>
-            <id>github</id>
-            <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/ishaileshmishra/cms</url>
-        </repository>
-    </repositories>
-
-    <!--    <distributionManagement>-->
-    <!--        -->
-    <!--        <snapshotRepository>-->
-    <!--            <id>shaileshmishra</id>-->
-    <!--            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>-->
-    <!--        </snapshotRepository>-->
-
-    <!--        <repository>-->
-    <!--            <id>shaileshmishra</id>-->
-    <!--            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
-    <!--        </repository>-->
-    <!--        -->
-    <!--    </distributionManagement>-->
+    </distributionManagement>
 
     <dependencies>
 
