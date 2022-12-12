@@ -9,7 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.ishaileshmishra</groupId>
     <artifactId>cms</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOTS</version>
     <packaging>jar</packaging>
     <name>cms</name>
     <description>Java SDK for Content Delivery API, CMS with an API-first approach
@@ -65,17 +65,41 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>shaileshmishra</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
+
+    <repositories>
+
         <repository>
             <id>shaileshmishra</id>
+            <name>Maven Snapshot</name>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+
+        <repository>
+            <id>shaileshmishra</id>
+            <name>Maven Staging Packages</name>
             <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
-    </distributionManagement>
 
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/contentstack/contentstack-java</url>
+        </repository>
+    </repositories>
+
+    <!--    <distributionManagement>-->
+    <!--        -->
+    <!--        <snapshotRepository>-->
+    <!--            <id>shaileshmishra</id>-->
+    <!--            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>-->
+    <!--        </snapshotRepository>-->
+
+    <!--        <repository>-->
+    <!--            <id>shaileshmishra</id>-->
+    <!--            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
+    <!--        </repository>-->
+    <!--        -->
+    <!--    </distributionManagement>-->
 
     <dependencies>
 
