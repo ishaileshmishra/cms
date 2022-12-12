@@ -1,10 +1,10 @@
 name: Publish package to the Maven Central Repository
 on:
   release:
-    types: [created]
+    types: [ created ]
   push:
 jobs:
-  publish:
+  publish-maven:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -23,6 +23,9 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+  publish-github:
+    runs-on: ubuntu-latest
+    steps:
       - name: Set up Java for publishing to GitHub Packages
         uses: actions/setup-java@v3
         with:
